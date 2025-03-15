@@ -1,9 +1,20 @@
-FROM node:18-alpine
-WORKDIR /app
-COPY package.json package-lock.json ./
+# Use an official Node runtime as a parent image
+FROM node:14
+
+# Set the working directory
+WORKDIR /usr/src/app
+
+# Copy package.json and package-lock.json (if available)
+COPY package*.json ./
+
+# Install dependencies
 RUN npm install
+
+# Copy the rest of the application code
 COPY . .
-COPY prisma ./prisma
-RUN npx prisma generate --schema=/app/prisma/schema.prisma
+
+# Expose the port the app runs on
 EXPOSE 3000
-CMD ["npx", "ts-node-dev", "--respawn", "--transpile-only", "src/devServer.ts"]
+
+# Define the command to run your app
+CMD [ "npm", "start" ]
